@@ -1,0 +1,81 @@
+*markdown_preview.txt*      For Vim version 8.2.     Last change: 2026 Jun 05
+
+                      MARKDOWN PREVIEW REFERENCE MANUAL
+
+Markdown Preview is a Vim plugin that splits the window and renders a preview of
+the currently open Markdown file inside a Vim terminal buffer using `glow`.
+
+==============================================================================
+1. Commands                                         *markdown-preview-commands*
+
+:MarkdownPreview
+        Open a split window and start the markdown preview rendering.
+
+:MarkdownPreviewRefresh
+        Manually refresh the preview window. This is also called
+        automatically on save if g:markdown_preview_auto_refresh is 1.
+
+:MarkdownPreviewToggle
+        Toggle the markdown preview window. If open, it will close it;
+        if closed, it will open it.
+
+==============================================================================
+2. Mappings                                         *markdown-preview-mappings*
+
+By default, the plugin maps the key sequence |<Leader>mp| to toggle the preview:
+
+        nmap <Leader>mp <Plug>MarkdownPreviewToggle
+
+To disable the default mappings, add the following to your |.vimrc|:
+>
+        let g:markdown_preview_no_mappings = 1
+<
+Then you can define your own mapping, for example:
+>
+        nmap <silent> <C-p> <Plug>MarkdownPreviewToggle
+<
+
+==============================================================================
+3. Configuration                               *markdown-preview-configuration*
+
+g:markdown_preview_command                     *g:markdown_preview_command*
+        The command to render the Markdown file. It can be a String or a List.
+        Default: `['glow', '-p']`
+        Example to use a dark style in glow:
+>
+        let g:markdown_preview_command = ['glow', '-s', 'dark', '-p']
+<
+        Note: If 'glow' is not in your PATH but is installed via snap, the
+        plugin will automatically try to use `/snap/bin/glow`.
+
+g:markdown_preview_split                         *g:markdown_preview_split*
+        The Vim command used to open the split window for the preview.
+        Default: `'vertical botright new'`
+        Example to split horizontally:
+>
+        let g:markdown_preview_split = 'botright new'
+<
+        Security: This command is sanitized. Only window-splitting keywords
+        like `vertical`, `botright`, `new`, etc., are allowed.
+
+g:markdown_preview_auto_refresh           *g:markdown_preview_auto_refresh*
+        Automatically refresh the preview window when saving the file.
+        Default: 1 (enabled). Set to 0 to disable.
+>
+        let g:markdown_preview_auto_refresh = 0
+<
+
+==============================================================================
+4. Security & Temporary Files                  *markdown-preview-security*
+
+The plugin creates a secure directory at `~/.markdown_preview_cache` (with
+permissions 0700) to store temporary Markdown files during preview. These
+files are automatically cleaned up when the preview window is closed or Vim
+exits.
+
+The use of a dedicated, non-hidden directory ensures compatibility with snap
+confinement (like for the `glow` snap) while maintaining security against
+symlink attacks.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
